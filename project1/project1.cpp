@@ -25,6 +25,8 @@ int main(void)
     {
         cout << fixed << setprecision(2) << studentNames[i*2] << ", " << studentNames[i*2] << '\t' << avgGrades(gradeDataFile) << endl;
     }
+    
+    gradeDataFile.close();
 }
 
 void openDataFile( ifstream& gradeDataFile )
