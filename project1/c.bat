@@ -1,0 +1,1 @@
+bcc32 -c -Ic:\borland\bcc55\include %1.cpp
