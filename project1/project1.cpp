@@ -16,14 +16,14 @@ float avgGrades( ifstream& gradeDataFile );
 int main(void)
 {
     ifstream gradeDataFile( "grades.dat" );
-    char studentNames[11][20] = {0};
+    char studentNames[12][20] = {0};
 
     openDataFile( gradeDataFile );
     getNames( gradeDataFile, studentNames );
     
     for( int i = 0; i < 6; i++ )
     {
-        cout << fixed << setprecision(2) << studentNames[i*2] << ", " << studentNames[i*2] << '\t' << avgGrades(gradeDataFile) << endl;
+        cout << fixed << setprecision(2) << studentNames[i*2] << ", " << studentNames[i*2+1] << '\t' << avgGrades(gradeDataFile) << endl;
     }
     
     gradeDataFile.close();
@@ -42,7 +42,7 @@ void getNames( ifstream& gradeDataFile, char studentNames[][20] )
 {    
     int arraySlot = 0;
     
-    while( arraySlot < 12 )
+    while( arraySlot < 13 )
     {
         gradeDataFile >> studentNames[arraySlot];
         arraySlot++;
