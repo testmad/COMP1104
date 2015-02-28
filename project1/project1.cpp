@@ -42,7 +42,7 @@ void getNames( ifstream& gradeDataFile, char studentNames[][20] )
 {    
     int arraySlot = 0;
     
-    while( arraySlot < 13 )
+    while( arraySlot < 12 )
     {
         gradeDataFile >> studentNames[arraySlot];
         arraySlot++;
