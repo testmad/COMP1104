@@ -257,6 +257,8 @@ void displayAllItems(item* pItem){
 
 void genDummyData(item* pItem){
 		
+		//Readfile here
+		
 		strcpy(pItem->itemNumber , "abc123");
 		strcpy(pItem->itemName ,"abc 123");
 		strcpy(pItem->itemDesc ,"If dev c++ was a real person");
@@ -276,3 +278,13 @@ void genDummyData(item* pItem){
 		strcpy(pItem->itemDesc ,"OMG!!1!1!wtfBBQHAX  I did it for the lulz.");
 		pItem->itemQuantity = 3;
 }
+
+// void writeFile(){
+
+//obvious
+
+//}
+
+
+// 
+
