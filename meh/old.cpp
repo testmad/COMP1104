@@ -9,12 +9,13 @@
 
 using namespace std;
 
+const int nullptr = 0;
+
 struct item{
 	char itemNumber[15]; //assuming the SKU could be alphanumeric.
 	char itemName[35];
 	char itemDesc[200];
 	int itemQuantity;
-	bool itemDeleted;
 };
 
 void readData(ifstream& inDataFile, int& numStruct, item*& pItem);
@@ -25,8 +26,6 @@ void displaySingleItem(item* pItem, int numStruct);
 void editItem(item* pItem, int numStruct, ofstream& outDataFile);
 void addItem(item*& pItem, int& numStruct, ofstream& outDataFile);
 void displayAllItems(item* pItem, int numStruct);
-void delItem();
-
 bool isDupe(char searchString[], item* pItem, int numStruct);
 
 int main(void){
@@ -58,14 +57,7 @@ int main(void){
 				addItem(pItem, numStruct, outDataFile);
 				break;
 			case 5:
-				delItem();
-				break;
-			case 6:
 				running = false;
-				break;
-			default: 
-				cout<<endl<<"Input invalid."<<endl<<endl;
-				system("pause");
 				break;
 		}
 	}
@@ -74,8 +66,7 @@ int main(void){
 int displayMenu(){
 	
 	int selection;
-	char temp[200];
-	
+
 	system("cls");
 	cout<<" ------------------------------------------------------------------------------\n";
 	cout<<"                           Inventory Management Menu\n";
@@ -84,26 +75,26 @@ int displayMenu(){
 	cout<<"                        2 - Edit an items information.\n\n";
 	cout<<"                        3 - Display all items.\n\n";
 	cout<<"                        4 - Add an item.\n\n";
-	cout<<"                        5 - Delete an item.\n\n";
-	cout<<"                        6 - Exit program.\n\n\n";
+	cout<<"                        5 - Exit program.\n\n\n";
 	cout<<"Select an option: ";
  
-	cin.getline(temp, 20);
+	cin>>setw(1)>>selection;
+	
+	cout<<selection;
+		system("pause");
+		
+	cin.ignore();
 	
 	while(cin.fail()){
-	
-		cout<<endl<<"Input invalid."<<endl;
+		cout<<"Input invalid."<<endl;
 		cin.clear();
-		cin.sync();
-		cout<<endl<<"Select an option: ";
-		cin.getline(temp, 20);
-	}
-	
-	cin.clear();
-	cin.sync();
-	
-	selection = atoi(temp);
-		
+		cin.ignore(999,'\n');
+		cout<<"Select an option: ";
+		cin>>setw(1)>>selection;
+		cout<<selection;
+		system("pause");
+		cin.ignore();
+	}	
 	return selection;
 }
 
@@ -405,10 +396,6 @@ void addItem(item*& pItem, int& numStruct, ofstream& outDataFile){
 	system("pause");
 }
 
-void delItem(){
-	
-}
-
 void readData(ifstream& inDataFile, int& numStruct, item*& pItem){
 		
 	inDataFile.open("inv.dat");
@@ -483,3 +470,4 @@ bool isDupe(char searchString[],item* pItem, int numStruct ){
 	
 	return found;
 }
+
