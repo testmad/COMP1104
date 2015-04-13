@@ -1,5 +1,5 @@
 //David Walker
-//Project 4
+//Project 5
 
 #include <iostream>
 #include <iomanip>
@@ -280,7 +280,7 @@ void editItem(item* pItem, int numStruct, ofstream& outDataFile){
 				cout<<" Item Description: "<<newDesc<<endl<<endl;
 				cout<<"    Item Quantity: "<<newQuantity<<endl<<endl<<endl;
 				
-				cout<<"Does this look correct? (y|n)";
+				cout<<"Does this look correct? (y|N)";
 				cin>>noskipws>>choice;
 				
 				if(choice == 'y')
@@ -293,12 +293,19 @@ void editItem(item* pItem, int numStruct, ofstream& outDataFile){
 						pWalk->itemQuantity = newQuantity;
 						
 						writeData(outDataFile, numStruct, pItem);
-						
+						cout<<"\nData successfully written."<<endl;
 						cout<<endl;	
 					}
 				else
 					{
 						correct = false;
+						system("cls");
+						cout<<" ------------------------------------------------------------------------------\n";
+						cout<<"                              Inventory Editor\n";
+						cout<<" ------------------------------------------------------------------------------\n\n\n";
+						cout<<"                              Item not changed\n\n";
+						system("pause");
+						
 						system("cls");
 						cout<<" ------------------------------------------------------------------------------\n";
 						cout<<"                              Inventory Editor\n";
@@ -472,11 +479,18 @@ void addItem(item*& pItem, int& numStruct, ofstream& outDataFile){
 			
 			numStruct++;
 			writeData(outDataFile, numStruct, pItem);
-			cout<<"Data successfully written."<<endl;				
+			cout<<"\nData successfully written."<<endl;				
 			cout<<endl;
 		}
 		else{
 			correct = false;
+			system("cls");
+			cout<<" ------------------------------------------------------------------------------\n";
+			cout<<"                            Add Inventory Item\n";
+			cout<<" ------------------------------------------------------------------------------\n\n\n";
+			cout<<"                              Item not added\n\n";
+			system("pause");
+			
 			system("cls");
 			cout<<" ------------------------------------------------------------------------------\n";
 			cout<<"                            Add Inventory Item\n";
@@ -584,7 +598,7 @@ void delItem(item*& pItem, int& numStruct, ofstream& outDataFile){
 				
 			numStruct--;
 			writeData(outDataFile, numStruct, pItem);
-			cout<<"Data successfully written."<<endl;				
+			cout<<"\nData successfully written."<<endl;				
 			cout<<endl;
 		}
 		else
