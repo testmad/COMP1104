@@ -18,26 +18,22 @@ struct item{
 
 void readData(ifstream& inDataFile, int& numStruct, item*& pItem);
 void writeData(ofstream& outDataFile, int numStruct, item*& pItem);
-
 int displayMenu();
 void displaySingleItem(item* pItem, int numStruct);
 void editItem(item* pItem, int numStruct, ofstream& outDataFile);
 void addItem(item*& pItem, int& numStruct, ofstream& outDataFile);
 void displayAllItems(item* pItem, int numStruct);
 void delItem(item*& pItem, int& numStruct, ofstream& outDataFile);
-
-bool isDupe(char searchString[], item* pItem, int numStruct);
+bool isNumDupe(char searchString[], item* pItem, int numStruct);
+bool isNameDupe(char searchString[], item* pItem, int numStruct);
 
 int main(void){
-	
+
 	ifstream inDataFile;
 	ofstream outDataFile;
-	
 	int numStruct;
 	int menuSelection;
-	
 	bool running = true;
-	
 	item* pItem;
 	readData( inDataFile, numStruct, pItem);
 
@@ -71,10 +67,10 @@ int main(void){
 }
 
 int displayMenu(){
-	
+
 	int selection;
 	char temp[200];
-	
+
 	system("cls");
 	cout<<" ------------------------------------------------------------------------------\n";
 	cout<<"                           Inventory Management Menu\n";
@@ -86,37 +82,32 @@ int displayMenu(){
 	cout<<"                        5 - Delete an item.\n\n";
 	cout<<"                        6 - Exit program.\n\n\n";
 	cout<<"Select an option: ";
- 
 	cin.getline(temp, 20);
-	
+
 	while(cin.fail()){
-	
 		cout<<endl<<"Input invalid."<<endl;
 		cin.clear();
 		cin.sync();
 		cout<<endl<<"Select an option: ";
 		cin.getline(temp, 20);
 	}
-	
 	cin.clear();
 	cin.sync();
-	
+
 	selection = atoi(temp);
-		
 	return selection;
 }
 
 void displaySingleItem(item* pItem, int numStruct){
-	
+
 	char searchString[15];
 	bool found = false;
 	int i = 0;
-	
+
 	system("cls");
 	cout<<" ------------------------------------------------------------------------------\n";
 	cout<<"                               Item Information\n";
 	cout<<" ------------------------------------------------------------------------------\n\n";
-
 	cout<<"Enter item number to search for: ";
 	cin.getline(searchString, 15);
 	
@@ -127,7 +118,6 @@ void displaySingleItem(item* pItem, int numStruct){
 		cout<<endl<<"Enter item number to search for: ";
 		cin.getline(searchString, 15);
 	}
-	
 	cin.clear();
 	cin.sync();
 	
@@ -161,22 +151,18 @@ void editItem(item* pItem, int numStruct, ofstream& outDataFile){
 	char searchString[15];
 	bool correct = false;
 	char choice;
-	
 	char newNumber[15];
 	char newName[35];
 	char newDesc[200];
 	int newQuantity = -1;
-	
 	bool found = false;
 	int i = 0;
-
 	item* pWalk = pItem;
 
 	system("cls");
 	cout<<" ------------------------------------------------------------------------------\n";
 	cout<<"                              Inventory Editor\n";
 	cout<<" ------------------------------------------------------------------------------\n\n";
-
 	cout<<"Enter item number to edit: ";
 	cin.getline(searchString, 15);
 	
@@ -187,14 +173,11 @@ void editItem(item* pItem, int numStruct, ofstream& outDataFile){
 		cout<<endl<<"Enter item number to edit: ";
 		cin.getline(searchString, 15);
 	}
-	
 	cin.clear();
 	cin.sync();
 	
-	while(!found && i<numStruct)
-	{
-		if(!strcmp(pWalk->itemNumber, searchString))
-		{
+	while(!found && i<numStruct){
+		if(!strcmp(pWalk->itemNumber, searchString)){
 			found=true;	
 		}
 		else{
@@ -204,123 +187,123 @@ void editItem(item* pItem, int numStruct, ofstream& outDataFile){
 	}
 	if(found){
 		system("cls");
+		cout<<" ------------------------------------------------------------------------------\n";
+		cout<<"                              Inventory Editor\n";
+		cout<<" ------------------------------------------------------------------------------\n\n";
+		cout<<"        Item Name: "<<pWalk->itemName<<endl<<endl;
+		cout<<"      Item Number: "<<pWalk->itemNumber<<endl<<endl;
+		cout<<" Item Description: "<<pWalk->itemDesc<<endl<<endl;
+		cout<<"    Item Quantity: "<<pWalk->itemQuantity<<endl<<endl<<endl;
+		
+		while(!correct){
+			cout<<"Enter new item name: ";
+			cin.getline(newName, 35);
+			
+			while(cin.fail() || newName[0]=='\0'){
+				cout<<endl<<"Input invalid."<<endl;
+				cin.clear();
+				cin.sync();
+				cout<<endl<<"Enter new item name: ";
+				cin.getline(newName, 35);
+			}
+			cin.clear();
+			cin.sync();
+			
+			if(isNameDupe(newName, pItem, numStruct)){
+				cout << endl << "WARNING: item name already exists."<< endl << endl;
+			}
+		
+			cout<<"Enter new item number: ";
+			cin.getline(newNumber, 15, '\n');
+			
+			while(cin.fail() || newNumber[0]=='\0'){
+				cout<<endl<<"Input invalid."<<endl;
+				cin.clear();
+				cin.sync();
+				cout<<endl<<"Enter new item number: ";
+				cin.getline(newNumber, 15, '\n');
+			}
+			
+			if(isNumDupe(newNumber, pItem, numStruct)){
+				cout << endl << "ERROR: This item number already exists. Starting over."<< endl << endl;
+				continue;
+			}
+			cin.clear();
+			cin.sync();
+		
+			cout<<"Enter new item description: ";
+			cin.getline(newDesc, 200, '\n');
+			
+			while(cin.fail() || newDesc[0]=='\0'){
+				cout<<endl<<"Input invalid."<<endl;
+				cin.clear();
+				cin.sync();
+				cout<<endl<<"Enter new item description: ";
+				cin.getline(newDesc, 200, '\n');
+			}
+			cin.clear();
+			cin.sync();
+	
+			cout<<"Enter new item quantity: ";
+			cin>>noskipws>>newQuantity;
+			
+			while(cin.fail() || newQuantity == -1){
+				cout<<"Input invalid."<<endl;
+				cin.clear();
+				cin.sync();
+				cout<<"Enter new item quantity: ";
+				cin>>noskipws>>newQuantity;
+			}
+			cin.clear();
+			cin.sync();
+			
+			system("cls");
 			cout<<" ------------------------------------------------------------------------------\n";
 			cout<<"                              Inventory Editor\n";
 			cout<<" ------------------------------------------------------------------------------\n\n";
-			cout<<"        Item Name: "<<pWalk->itemName<<endl<<endl;
-			cout<<"      Item Number: "<<pWalk->itemNumber<<endl<<endl;
-			cout<<" Item Description: "<<pWalk->itemDesc<<endl<<endl;
-			cout<<"    Item Quantity: "<<pWalk->itemQuantity<<endl<<endl<<endl;
+			cout<<"        Item Name: "<<newName<<endl<<endl;
+			cout<<"      Item Number: "<<newNumber<<endl<<endl;
+			cout<<" Item Description: "<<newDesc<<endl<<endl;
+			cout<<"    Item Quantity: "<<newQuantity<<endl<<endl<<endl;
 			
-			while(!correct){
-				cout<<"Enter new item name: ";
-				cin.getline(newName, 35);
+			cout<<"Does this look correct? (y|N)";
+			cin>>noskipws>>choice;
+			
+			if(choice == 'y'){
+				correct = true;
 				
-				while(cin.fail() || newName[0]=='\0'){
-					cout<<endl<<"Input invalid."<<endl;
-					cin.clear();
-					cin.sync();
-					cout<<endl<<"Enter new item name: ";
-					cin.getline(newName, 35);
-				}
+				strcpy(pWalk->itemName , newName);
+				strcpy(pWalk->itemNumber , newNumber);
+				strcpy(pWalk->itemDesc , newDesc);
+				pWalk->itemQuantity = newQuantity;
 				
-				cin.clear();
-				cin.sync();
-		
-				cout<<"Enter new item number: ";
-				cin.getline(newNumber, 15, '\n');
-				
-				while(cin.fail() || newNumber[0]=='\0'){
-					cout<<endl<<"Input invalid."<<endl;
-					cin.clear();
-					cin.sync();
-					cout<<endl<<"Enter new item number: ";
-					cin.getline(newNumber, 15, '\n');
-				}
-				
-				cin.clear();
-				cin.sync();
-		
-				cout<<"Enter new item description: ";
-				cin.getline(newDesc, 200, '\n');
-				
-				while(cin.fail() || newDesc[0]=='\0'){
-					cout<<endl<<"Input invalid."<<endl;
-					cin.clear();
-					cin.sync();
-					cout<<endl<<"Enter new item description: ";
-					cin.getline(newDesc, 200, '\n');
-				}
-				
-				cin.clear();
-				cin.sync();
-		
-				cout<<"Enter new item quantity: ";
-				cin>>noskipws>>newQuantity;
-				
-				
-				while(cin.fail() || newQuantity == -1)
-				{
-					cout<<"Input invalid."<<endl;
-					cin.clear();
-					cin.sync();
-					cout<<"Enter new item quantity: ";
-					cin>>noskipws>>newQuantity;
-				}
-				
-				cin.clear();
-				cin.sync();
+				writeData(outDataFile, numStruct, pItem);
+				cout<<"\nData successfully written."<<endl;
+				cout<<endl;	
+			}
+			else{
+				correct = false;
+				system("cls");
+				cout<<" ------------------------------------------------------------------------------\n";
+				cout<<"                              Inventory Editor\n";
+				cout<<" ------------------------------------------------------------------------------\n\n\n";
+				cout<<"                              Item not changed\n\n";
+				system("pause");
 				
 				system("cls");
 				cout<<" ------------------------------------------------------------------------------\n";
 				cout<<"                              Inventory Editor\n";
 				cout<<" ------------------------------------------------------------------------------\n\n";
-				cout<<"        Item Name: "<<newName<<endl<<endl;
-				cout<<"      Item Number: "<<newNumber<<endl<<endl;
-				cout<<" Item Description: "<<newDesc<<endl<<endl;
-				cout<<"    Item Quantity: "<<newQuantity<<endl<<endl<<endl;
-				
-				cout<<"Does this look correct? (y|N)";
-				cin>>noskipws>>choice;
-				
-				if(choice == 'y')
-					{
-						correct = true;
-						
-						strcpy(pWalk->itemName , newName);
-						strcpy(pWalk->itemNumber , newNumber);
-						strcpy(pWalk->itemDesc , newDesc);
-						pWalk->itemQuantity = newQuantity;
-						
-						writeData(outDataFile, numStruct, pItem);
-						cout<<"\nData successfully written."<<endl;
-						cout<<endl;	
-					}
-				else
-					{
-						correct = false;
-						system("cls");
-						cout<<" ------------------------------------------------------------------------------\n";
-						cout<<"                              Inventory Editor\n";
-						cout<<" ------------------------------------------------------------------------------\n\n\n";
-						cout<<"                              Item not changed\n\n";
-						system("pause");
-						
-						system("cls");
-						cout<<" ------------------------------------------------------------------------------\n";
-						cout<<"                              Inventory Editor\n";
-						cout<<" ------------------------------------------------------------------------------\n\n";
-						cout<<"        Item Name: "<<pWalk->itemName<<endl<<endl;
-						cout<<"      Item Number: "<<pWalk->itemNumber<<endl<<endl;
-						cout<<" Item Description: "<<pWalk->itemDesc<<endl<<endl;
-						cout<<"    Item Quantity: "<<pWalk->itemQuantity<<endl<<endl<<endl;
-					}
-				cin.clear();
-				cin.sync();
+				cout<<"        Item Name: "<<pWalk->itemName<<endl<<endl;
+				cout<<"      Item Number: "<<pWalk->itemNumber<<endl<<endl;
+				cout<<" Item Description: "<<pWalk->itemDesc<<endl<<endl;
+				cout<<"    Item Quantity: "<<pWalk->itemQuantity<<endl<<endl<<endl;
 			}
+			cin.clear();
+			cin.sync();
+		}
 	}
-	else
-	{
+	else{
 		cout<<endl<<"No matching item was found"<<endl<<endl;
 	}
 	system("pause");
@@ -335,8 +318,7 @@ void displayAllItems(item* pItem, int numStruct){
 	cout<<"                               Inventory Summary\n";
 	cout<<" ------------------------------------------------------------------------------\n\n";
 
-	for(int i = 0; i < numStruct; i++)
-	{
+	for(int i = 0; i < numStruct; i++){
 		if(i!=0 && i%2==0){
 			system("pause");
 			system("cls");
@@ -360,7 +342,6 @@ void addItem(item*& pItem, int& numStruct, ofstream& outDataFile){
 
 	bool correct = false;
 	char choice;
-	
 	char newNumber[15];
 	char newName[35];
 	char newDesc[200];
@@ -382,58 +363,56 @@ void addItem(item*& pItem, int& numStruct, ofstream& outDataFile){
 			cout<<endl<<"Enter new item name: ";
 			cin.getline(newName, 35);
 		}
-		
 		cin.clear();
 		cin.sync();
 		
-		if(isDupe(newName, pItem, numStruct)){
-			cout << endl << "This item already exists."<< endl << endl;
-			continue;
+		if(isNameDupe(newName, pItem, numStruct)){
+			cout << endl << "WARNING: item name already exists."<< endl << endl;
 		}
 	
 		cout<<"Enter new item number: ";
-				cin.getline(newNumber, 15, '\n');
-				
-				while(cin.fail() || newNumber[0]=='\0'){
-					cout<<endl<<"Input invalid."<<endl;
-					cin.clear();
-					cin.sync();
-					cout<<endl<<"Enter new item number: ";
-					cin.getline(newNumber, 15, '\n');
-				}
-				
-				cin.clear();
-				cin.sync();
+		cin.getline(newNumber, 15, '\n');
 		
-				cout<<"Enter new item description: ";
-				cin.getline(newDesc, 200, '\n');
+		while(cin.fail() || newNumber[0]=='\0'){
+			cout<<endl<<"Input invalid."<<endl;
+			cin.clear();
+			cin.sync();
+			cout<<endl<<"Enter new item number: ";
+			cin.getline(newNumber, 15, '\n');
+		}
+		cin.clear();
+		cin.sync();
 				
-				while(cin.fail() || newDesc[0]=='\0'){
-					cout<<endl<<"Input invalid."<<endl;
-					cin.clear();
-					cin.sync();
-					cout<<endl<<"Enter new item description: ";
-					cin.getline(newDesc, 200, '\n');
-				}
-				
-				cin.clear();
-				cin.sync();
+		if(isNumDupe(newNumber, pItem, numStruct)){
+			cout << endl << "ERROR: This item number already exists. Starting over."<< endl << endl;
+			continue;
+		}
 		
-				cout<<"Enter new item quantity: ";
-				cin>>noskipws>>newQuantity;
+		cout<<"Enter new item description: ";
+		cin.getline(newDesc, 200, '\n');
 				
-				
-				while(cin.fail() || newQuantity == -1)
-				{
-					cout<<"Input invalid."<<endl;
-					cin.clear();
-					cin.sync();
-					cout<<"Enter new item quantity: ";
-					cin>>noskipws>>newQuantity;
-				}
-				
-				cin.clear();
-				cin.sync();
+		while(cin.fail() || newDesc[0]=='\0'){
+			cout<<endl<<"Input invalid."<<endl;
+			cin.clear();
+			cin.sync();
+			cout<<endl<<"Enter new item description: ";
+			cin.getline(newDesc, 200, '\n');
+		}
+		cin.clear();
+		cin.sync();
+	
+		cout<<"Enter new item quantity: ";
+		cin>>noskipws>>newQuantity;
+					
+		while(cin.fail() || newQuantity == -1){
+			cout<<"Input invalid."<<endl;
+			cin.clear();
+			cin.sync();
+			cout<<"Enter new item quantity: ";
+			cin>>noskipws>>newQuantity;
+		}
+		cin.clear();
+		cin.sync();
 		
 		system("cls");
 		cout<<" ------------------------------------------------------------------------------\n";
@@ -443,7 +422,6 @@ void addItem(item*& pItem, int& numStruct, ofstream& outDataFile){
 		cout<<"      Item Number: "<<newNumber<<endl<<endl;
 		cout<<" Item Description: "<<newDesc<<endl<<endl;
 		cout<<"    Item Quantity: "<<newQuantity<<endl<<endl<<endl;
-		
 		cout<<"Does this look correct? (y|N)";
 		cin>>noskipws>>choice;
 		
@@ -490,7 +468,6 @@ void addItem(item*& pItem, int& numStruct, ofstream& outDataFile){
 			cout<<" ------------------------------------------------------------------------------\n\n\n";
 			cout<<"                              Item not added\n\n";
 			system("pause");
-			
 			system("cls");
 			cout<<" ------------------------------------------------------------------------------\n";
 			cout<<"                            Add Inventory Item\n";
@@ -506,7 +483,6 @@ void delItem(item*& pItem, int& numStruct, ofstream& outDataFile){
 
 	bool correct = false;
 	char choice;
-	
 	char searchString[15];
 	bool found = false;
 	int i = 0 ;
@@ -516,38 +492,30 @@ void delItem(item*& pItem, int& numStruct, ofstream& outDataFile){
 	cout<<" ------------------------------------------------------------------------------\n";
 	cout<<"                          Delete Inventory Item\n";
 	cout<<" ------------------------------------------------------------------------------\n\n";
-		
-			
 	cout<<"Enter item number to delete: ";
 	cin.getline(searchString, 15);
 	
-	while(cin.fail() || searchString[0]=='\0')
-	{
+	while(cin.fail() || searchString[0]=='\0'){
 		cout<<endl<<"Input invalid."<<endl;
 		cin.clear();
 		cin.sync();
 		cout<<"Enter item number to delete: ";
 		cin.getline(searchString, 15);
 	}
-	
 	cin.clear();
 	cin.sync();
 		
-	while(!found && i<numStruct)
-	{
-		if(!strcmp(pWalk1->itemNumber, searchString))
-		{
+	while(!found && i<numStruct){
+		if(!strcmp(pWalk1->itemNumber, searchString)){
 			found=true;
 		}
-		else
-		{
+		else{
 			i++;
 			pWalk1++;
 		}
 	}
 	
-	if(found)
-	{
+	if(found){
 		system("cls");
 		cout<<" ------------------------------------------------------------------------------\n";
 		cout<<"                          Delete Inventory Item\n";
@@ -556,13 +524,10 @@ void delItem(item*& pItem, int& numStruct, ofstream& outDataFile){
 		cout<<"      Item Number: "<<pWalk1->itemNumber<<endl<<endl;
 		cout<<" Item Description: "<<pWalk1->itemDesc<<endl<<endl;
 		cout<<"    Item Quantity: "<<pWalk1->itemQuantity<<endl<<endl<<endl;
-
 		cout<<"Really delete this item? (y|N)";
 		cin>>noskipws>>choice;
 		
-		if(choice == 'y')
-		{
-							
+		if(choice == 'y'){
 			item* tempItem;
 			tempItem = new(nothrow) item[numStruct -1];
 			if(tempItem == nullptr){
@@ -575,49 +540,39 @@ void delItem(item*& pItem, int& numStruct, ofstream& outDataFile){
 				
 			for( int i = 0; i < numStruct; i++){
 					
-					if(pWalk2->itemNumber == pWalk1->itemNumber)
-					{
-						pWalk2++;
-					}
-					else
-					{
-						strcpy(tempWalk->itemNumber , pWalk2->itemNumber );
-						strcpy(tempWalk->itemName, pWalk2->itemName);
-						strcpy(tempWalk->itemDesc, pWalk2->itemDesc);
-						tempWalk->itemQuantity = pWalk2->itemQuantity;
-						tempWalk++;
-						pWalk2++;
-					}
-					
+				if(pWalk2->itemNumber == pWalk1->itemNumber){
+					pWalk2++;
+				}
+				else{
+					strcpy(tempWalk->itemNumber , pWalk2->itemNumber );
+					strcpy(tempWalk->itemName, pWalk2->itemName);
+					strcpy(tempWalk->itemDesc, pWalk2->itemDesc);
+					tempWalk->itemQuantity = pWalk2->itemQuantity;
+					tempWalk++;
+					pWalk2++;
+				}
 			}
-				
-	
+
 			delete [] pItem;					
 			pItem = tempItem;
 			tempItem = nullptr;
-				
+
 			numStruct--;
 			writeData(outDataFile, numStruct, pItem);
 			cout<<"\nData successfully written."<<endl;				
 			cout<<endl;
 		}
-		else
-		{
-
+		else{
 			system("cls");
 			cout<<" ------------------------------------------------------------------------------\n";
 			cout<<"                          Delete Inventory Item\n";
 			cout<<" ------------------------------------------------------------------------------\n\n\n";
-			
 			cout<<"                             No Item Deleted\n\n";
-
 		}
 	}
-	else
-	{
+	else{
 		cout<<endl<<"No matching item was found"<<endl<<endl;
 	}
-
 	cin.clear();
 	cin.sync();
 	
@@ -653,7 +608,6 @@ void readData(ifstream& inDataFile, int& numStruct, item*& pItem){
 		inDataFile.ignore();
 		pWalk++;
 	}
-	
 	inDataFile.close();
 }
 
@@ -677,11 +631,10 @@ void writeData(ofstream& outDataFile, int numStruct, item*& pItem){
 		outDataFile << pWalk->itemQuantity << endl;
 		pWalk++;
 	}
-	
 	outDataFile.close();
 }
 
-bool isDupe(char searchString[],item* pItem, int numStruct ){
+bool isNumDupe(char searchString[],item* pItem, int numStruct ){
 	
 	bool found = false;
 	int i = 0;
@@ -695,6 +648,22 @@ bool isDupe(char searchString[],item* pItem, int numStruct ){
 			pItem++;
 		}
 	}	
+	return found;
+}
+
+bool isNameDupe(char searchString[],item* pItem, int numStruct ){
 	
+	bool found = false;
+	int i = 0;
+	
+	while(!found && i<numStruct){
+		if(!strcmp(pItem->itemName, searchString)){
+			found=true;
+		}
+		else{
+			i++;
+			pItem++;
+		}
+	}	
 	return found;
 }
